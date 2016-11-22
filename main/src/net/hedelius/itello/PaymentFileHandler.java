@@ -2,6 +2,7 @@ package net.hedelius.itello;
 
 import se.itello.example.payments.PaymentReceiver;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.Arrays;
@@ -29,5 +30,7 @@ public class PaymentFileHandler implements IPaymentFileHandler {
 
         byte[] fileContents = fileReader.read(fileName);
         paymentReceiver.startPaymentBundle("foo", Date.from(Instant.now()), "bar");
+        paymentReceiver.payment(new BigDecimal(3000), "1234567890");
+        paymentReceiver.payment(new BigDecimal(1000), "2345678901");
     }
 }
