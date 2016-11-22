@@ -5,5 +5,5 @@ package net.hedelius.itello;
  */
 public interface IPaymentFileHandler {
 
-    void handleFile(String fileName);
+    void handleFile(String fileName) throws PaymentException;
 }

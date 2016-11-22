@@ -6,9 +6,10 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.mockito.InOrder;
 import se.itello.example.payments.PaymentReceiver;
@@ -26,7 +27,7 @@ public class ItelloTest {
 
         fileReader = mock(FileReader.class);
         paymentReceiver = mock(PaymentReceiver.class);
-        sut = new PaymentFileHandler(fileReader, paymentReceiver);
+        sut = new WholeFileHandler(fileReader, paymentReceiver);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -40,20 +41,6 @@ public class ItelloTest {
 
         // assert - should not get here
         fail();
-    }
-
-    @Test
-    public void testBetalningFileName() {
-
-        // arrange
-        String paymentServiceFile = "A_legitimate_file_betalningsservice.txt";
-
-        // act
-        sut.handleFile(paymentServiceFile);
-
-        // assert
-        verify(fileReader).read(paymentServiceFile);
-        verify(paymentReceiver).startPaymentBundle(anyString(), any(Date.class), anyString());
     }
 
     @Test
@@ -78,22 +65,14 @@ public class ItelloTest {
         sut.handleFile(fileName);
 
         // assert
+        String expectedAccount = "5555 5555555555";
+        Date expectedDate = new GregorianCalendar(2011, 2, 15).getTime();
+        String expectedCurrency = "SEK";
         InOrder inOrder = inOrder(paymentReceiver);
-        inOrder.verify(paymentReceiver).startPaymentBundle(anyString(), any(Date.class), anyString());
+        inOrder.verify(paymentReceiver).startPaymentBundle(expectedAccount, expectedDate, expectedCurrency);
         inOrder.verify(paymentReceiver).payment(new BigDecimal(3000), "1234567890");
         inOrder.verify(paymentReceiver).payment(new BigDecimal(1000), "2345678901");
+        inOrder.verify(paymentReceiver).payment(new BigDecimal(300.10), "3456789012");
+        inOrder.verify(paymentReceiver).payment(new BigDecimal(400.07), "4567890123");
     }
-    public void testInbetalningFileName() {
-
-        // arrange
-        String paymentServiceFile = "A_legitimate_file_inbetalningstjansten.txt";
-
-        // act
-        sut.handleFile(paymentServiceFile);
-
-        // assert
-        verify(fileReader).read(paymentServiceFile);
-        verify(paymentReceiver).startPaymentBundle(anyString(), any(Date.class), anyString());
-    }
-
 }
