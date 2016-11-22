@@ -4,21 +4,21 @@ import static junit.framework.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-import java.time.Instant;
 import java.util.Date;
-import java.util.stream.Stream;
 import se.itello.example.payments.PaymentReceiver;
 
 public class ItelloTest {
 
     private IPaymentFileHandler sut;
     private PaymentReceiver paymentReceiver;
+    private FileReader fileReader;
 
     @Before
     public void setup() {
 
+        fileReader = mock(FileReader.class);
         paymentReceiver = mock(PaymentReceiver.class);
-        sut = new PaymentFileHandler(paymentReceiver);
+        sut = new PaymentFileHandler(fileReader, paymentReceiver);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -44,6 +44,7 @@ public class ItelloTest {
         sut.handleFile(paymentServiceFile);
 
         // assert
+        verify(fileReader).read(paymentServiceFile);
         verify(paymentReceiver).startPaymentBundle(anyString(), any(Date.class), anyString());
     }
 
@@ -57,6 +58,7 @@ public class ItelloTest {
         sut.handleFile(paymentServiceFile);
 
         // assert
+        verify(fileReader).read(paymentServiceFile);
         verify(paymentReceiver).startPaymentBundle(anyString(), any(Date.class), anyString());
     }
 }
