@@ -9,9 +9,9 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.IllegalFormatException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class WholeFileHandler implements IPaymentFileHandler {
@@ -66,8 +66,32 @@ public class WholeFileHandler implements IPaymentFileHandler {
         }
 
         paymentReceiver.startPaymentBundle(
-                accountNumber, // TODO good enough?
+                accountNumber,
                 date,
                 currency);
+
+        List<String> payments =
+                Arrays.stream(lines, 1, lines.length).filter(x -> x.startsWith("B")).collect(Collectors.toList());
+
+        if (payments.size() != Integer.parseInt(count.trim())) {
+            throw new PaymentException("Incorrect number of payment records compared to header!");
+        }
+
+        BigDecimal recordSum =
+                payments.stream().map(x -> bigDecimalFromString(x.substring(1, 15))).reduce((x, y) -> x.add(y)).get();
+        if (!recordSum.equals(bigDecimalFromString(sum))){
+            throw new PaymentException("Incorrect sum of payments compared to header!");
+        }
+
+        payments.forEach(x -> {
+            BigDecimal amount = bigDecimalFromString(x.substring(1, 15));
+            paymentReceiver.payment(amount, x.substring(15, 50).trim());
+        });
+
+        paymentReceiver.endPaymentBundle();
+    }
+
+    private BigDecimal bigDecimalFromString(String s) {
+        return new BigDecimal(s.trim().replace(',', '.'));
     }
 }

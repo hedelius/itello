@@ -49,7 +49,8 @@ public class ItelloTest {
         // arrange
         String fileName = "foobar_betalningsservice.txt";
         String testDataHex =
-                "4f35353535203535353535353535353520202020202020343731312c3137" +
+                "4f35353535203535353535353535353520202020202020343730302c3137" +
+             // "4f35353535203535353535353535353520202020202020343731312c3137" + // not correct!
                 "20202020202020202034323031313033313553454b0d0a42202020202020" +
                 "202020203330303031323334353637383930202020202020202020202020" +
                 "202020202020202020202020200d0a422020202020202020202031303030" +
@@ -70,9 +71,10 @@ public class ItelloTest {
         String expectedCurrency = "SEK";
         InOrder inOrder = inOrder(paymentReceiver);
         inOrder.verify(paymentReceiver).startPaymentBundle(expectedAccount, expectedDate, expectedCurrency);
-        inOrder.verify(paymentReceiver).payment(new BigDecimal(3000), "1234567890");
-        inOrder.verify(paymentReceiver).payment(new BigDecimal(1000), "2345678901");
-        inOrder.verify(paymentReceiver).payment(new BigDecimal(300.10), "3456789012");
-        inOrder.verify(paymentReceiver).payment(new BigDecimal(400.07), "4567890123");
+        inOrder.verify(paymentReceiver).payment(new BigDecimal("3000"), "1234567890");
+        inOrder.verify(paymentReceiver).payment(new BigDecimal("1000"), "2345678901");
+        inOrder.verify(paymentReceiver).payment(new BigDecimal("300.10"), "3456789012");
+        inOrder.verify(paymentReceiver).payment(new BigDecimal("400.07"), "4567890123");
+        inOrder.verify(paymentReceiver).endPaymentBundle();
     }
 }
