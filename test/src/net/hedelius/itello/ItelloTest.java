@@ -6,8 +6,6 @@ import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -18,7 +16,7 @@ import javax.xml.bind.DatatypeConverter;
 
 public class ItelloTest {
 
-    private IPaymentFileHandler sut;
+    private PaymentFileHandler sut;
     private PaymentReceiver paymentReceiver;
     private FileReader fileReader;
 
@@ -27,7 +25,7 @@ public class ItelloTest {
 
         fileReader = mock(FileReader.class);
         paymentReceiver = mock(PaymentReceiver.class);
-        sut = new WholeFileHandler(fileReader, paymentReceiver);
+        sut = new SmallFileHandler(fileReader, paymentReceiver);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -76,5 +74,35 @@ public class ItelloTest {
         inOrder.verify(paymentReceiver).payment(new BigDecimal("300.10"), "3456789012");
         inOrder.verify(paymentReceiver).payment(new BigDecimal("400.07"), "4567890123");
         inOrder.verify(paymentReceiver).endPaymentBundle();
+    }
+
+    @Test
+    public void testInbetalningTestData() {
+
+        // arrange
+        String fileName = "foobar_inbetalningstjansten.txt";
+        String testDataHex =
+                "303030303030303030303132333431323334353637383937303030303030" +
+                "303030303030303030303030303030303030303030303030303030303030" +
+                "30303030303030303030303030303030303030300d0a3330303030303030" +
+                "303030303030303034303030303030303030303030303030303030303030" +
+                "303039383736353433323130202020202020202020202020202020202020" +
+                "2020202020202020202020200d0a33303030303030303030303030303030" +
+                "313030303030303030303030303030303030303030303030393837363534" +
+                "333231302020202020202020202020202020202020202020202020202020" +
+                "202020200d0a333030303030303030303030303030313033303030303030" +
+                "303030303030303030303030303030303938373635343332313020202020" +
+                "20202020202020202020202020202020202020202020202020200d0a3939" +
+                "303030303030303030303030303135333030303030303030303030303030" +
+                "303030303033303030303030303030303030303030303030303030303030" +
+                "3030303030303030303030303030303030300d0a";
+        byte[] testDataBytes = DatatypeConverter.parseHexBinary(testDataHex);
+        when(fileReader.read(fileName)).thenReturn(testDataBytes);
+
+        // act
+        sut.handleFile(fileName);
+
+        // TODO
+        fail();
     }
 }

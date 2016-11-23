@@ -1,29 +1,24 @@
 package net.hedelius.itello;
 
 import se.itello.example.payments.PaymentReceiver;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-public class WholeFileHandler implements IPaymentFileHandler {
+public class SmallFileHandler implements PaymentFileHandler {
 
     private static final String CHARSET = "ISO8859-1";
+    private static final String BETALNING = "_betalningsservice.txt";
+    private static final String INBETALNING = "_inbetalningstjansten.txt";
     private final PaymentReceiver paymentReceiver;
     private final FileReader fileReader;
-    private String[] supportedFileNameEndings =
-            new String[] {"_betalningsservice.txt", "_inbetalningstjansten.txt"};
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-    public WholeFileHandler(FileReader fileReader, PaymentReceiver paymentReceiver) {
+    public SmallFileHandler(FileReader fileReader, PaymentReceiver paymentReceiver) {
+
         this.fileReader = fileReader;
         this.paymentReceiver = paymentReceiver;
     }
@@ -31,11 +26,16 @@ public class WholeFileHandler implements IPaymentFileHandler {
     @Override
     public void handleFile(String fileName) throws PaymentException {
 
-        if (Arrays.stream(supportedFileNameEndings).noneMatch(i -> fileName.endsWith(i)))
+        if (fileName.endsWith(BETALNING)) {
+            handleBetalning(loadFile(fileName));
+        } else if (fileName.endsWith(INBETALNING)) {
+            handleInbetalning(loadFile(fileName));
+        } else {
             throw new IllegalArgumentException("Unsupported file type!");
+        }
+    }
 
-        // TODO handle both types
-        // and then, handle any type
+    private String[] loadFile(String fileName) {
 
         byte[] fileContentBytes = fileReader.read(fileName);
         String fileContent = null;
@@ -45,11 +45,15 @@ public class WholeFileHandler implements IPaymentFileHandler {
             // not going to happen
         }
 
-        String[] lines = fileContent.split("\\r\\n");
+        return fileContent.split("\\r\\n");
+    }
+
+    private void handleBetalning(String[] lines) {
+
         String orderLine = lines[0];
 
         if (!orderLine.startsWith("O")) {
-            throw new PaymentException("Incorrect file format, multiple header lines!");
+            throw new PaymentException("First line is not a header line!");
         }
 
         String accountNumber = orderLine.substring( 1, 16);
@@ -89,6 +93,10 @@ public class WholeFileHandler implements IPaymentFileHandler {
         });
 
         paymentReceiver.endPaymentBundle();
+    }
+
+    private void handleInbetalning(String[] lines) {
+
     }
 
     private BigDecimal bigDecimalFromString(String s) {
