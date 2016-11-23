@@ -64,7 +64,7 @@ public class ItelloTest {
         sut.handleFile(fileName);
 
         // assert
-        String expectedAccount = "5555 5555555555";
+        String expectedAccount = "5555-5555555555";
         Date expectedDate = new GregorianCalendar(2011, 2, 15).getTime();
         String expectedCurrency = "SEK";
         InOrder inOrder = inOrder(paymentReceiver);
@@ -102,7 +102,16 @@ public class ItelloTest {
         // act
         sut.handleFile(fileName);
 
-        // TODO
-        fail();
+        // assert
+        String expectedAccount = "1234-1234567897";
+        // Date expectedDate = new GregorianCalendar(2011, 2, 15).getTime();
+        String expectedCurrency = "SEK";
+        InOrder inOrder = inOrder(paymentReceiver);
+        inOrder.verify(paymentReceiver).startPaymentBundle(eq(expectedAccount), any(Date.class), eq(expectedCurrency));
+//        inOrder.verify(paymentReceiver).payment(new BigDecimal("3000"), "1234567890");
+//        inOrder.verify(paymentReceiver).payment(new BigDecimal("1000"), "2345678901");
+//        inOrder.verify(paymentReceiver).payment(new BigDecimal("300.10"), "3456789012");
+//        inOrder.verify(paymentReceiver).payment(new BigDecimal("400.07"), "4567890123");
+//        inOrder.verify(paymentReceiver).endPaymentBundle();
     }
 }
