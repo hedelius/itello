@@ -54,11 +54,11 @@ public class PaymentFileHandler {
      */
     public void handleFile(String fileName) throws PaymentException {
 
-        PaymentStrategy strategy = strategies.get(fileName); // TODO wrong!
+        String fileNameEnding = fileName.substring(fileName.lastIndexOf("_"));
+        PaymentStrategy strategy = strategies.get(fileNameEnding);
         if (strategy == null)
             throw new IllegalArgumentException("Unsupported file type!");
 
-        // TODO clean up
         InputStream stream = fileReader.find(fileName);
         strategy.handle(stream, paymentReceiver);
     }

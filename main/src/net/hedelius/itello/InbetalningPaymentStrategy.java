@@ -11,6 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * Implementation of <code>PaymentStrategy</code> that handles files
+ * that conform to specification in the document Inbetalningstjänsen.doc.
+ * Do not use this class for large files - it reads the entire file into memory
+ * before processing it!
+ */
 public class InbetalningPaymentStrategy implements PaymentStrategy {
 
     private static final String CHARSET = "ISO8859-1";
@@ -19,7 +25,6 @@ public class InbetalningPaymentStrategy implements PaymentStrategy {
     @Override
     public void handle(InputStream input, PaymentReceiver paymentReceiver) throws PaymentException {
 
-        // TODO dpn't read whole file!
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName(CHARSET)));
         String[] lines = reader.lines().toArray(x -> new String[x]);
 

@@ -12,6 +12,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of <code>PaymentStrategy</code> that handles files
+ * that conform to specification in the document Betalningsservice.doc.
+ * Do not use this class for large files - it reads the entire file into memory
+ * before processing it!
+ */
 public class BetalningPaymentStrategy implements PaymentStrategy {
 
     private static final String CHARSET = "ISO8859-1";
@@ -20,15 +26,8 @@ public class BetalningPaymentStrategy implements PaymentStrategy {
     @Override
     public void handle(InputStream input, PaymentReceiver paymentReceiver) throws PaymentException {
 
-        // TODO dpn't read whole file!
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName(CHARSET)));
         String[] lines = reader.lines().toArray(x -> new String[x]);
-
-//        try {
-//            fileContent = new String(fileContentBytes, CHARSET);
-//        } catch (UnsupportedEncodingException e) {
-//            // not going to happen
-//        }
 
         String orderLine = lines[0];
 
