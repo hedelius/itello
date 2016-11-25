@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -18,14 +20,14 @@ public class ItelloTest {
 
     private PaymentFileHandler sut;
     private PaymentReceiver paymentReceiver;
-    private FileReader fileReader;
+    private FileFinderService fileReader;
 
     @Before
     public void setup() {
 
-        fileReader = mock(FileReader.class);
+        fileReader = mock(FileFinderService.class);
         paymentReceiver = mock(PaymentReceiver.class);
-        sut = new SmallFileHandler(fileReader, paymentReceiver);
+        sut = new PaymentFileHandler(fileReader, paymentReceiver);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -58,7 +60,8 @@ public class ItelloTest {
                 "20202020202020203430302c303734353637383930313233202020202020" +
                 "202020202020202020202020202020202020200d0a";
         byte[] testDataBytes = DatatypeConverter.parseHexBinary(testDataHex);
-        when(fileReader.read(fileName)).thenReturn(testDataBytes);
+        InputStream testDataStream = new ByteArrayInputStream(testDataBytes);
+        when(fileReader.find(fileName)).thenReturn(testDataStream);
 
         // act
         sut.handleFile(fileName);
@@ -97,7 +100,8 @@ public class ItelloTest {
                 "303030303033303030303030303030303030303030303030303030303030" +
                 "3030303030303030303030303030303030300d0a";
         byte[] testDataBytes = DatatypeConverter.parseHexBinary(testDataHex);
-        when(fileReader.read(fileName)).thenReturn(testDataBytes);
+        InputStream testDataStream = new ByteArrayInputStream(testDataBytes);
+        when(fileReader.find(fileName)).thenReturn(testDataStream);
 
         // act
         sut.handleFile(fileName);
