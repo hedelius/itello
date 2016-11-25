@@ -1,11 +1,8 @@
 package net.hedelius.itello;
 
 import se.itello.example.payments.PaymentReceiver;
-
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class PaymentFileHandler {
 

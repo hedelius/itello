@@ -4,16 +4,13 @@ import static junit.framework.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
 import org.mockito.InOrder;
 import se.itello.example.payments.PaymentReceiver;
-
 import javax.xml.bind.DatatypeConverter;
 
 public class ItelloTest {

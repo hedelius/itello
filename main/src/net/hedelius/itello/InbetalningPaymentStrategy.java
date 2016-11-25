@@ -1,7 +1,6 @@
 package net.hedelius.itello;
 
 import se.itello.example.payments.PaymentReceiver;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;

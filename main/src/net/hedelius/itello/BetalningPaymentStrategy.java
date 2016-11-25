@@ -1,7 +1,6 @@
 package net.hedelius.itello;
 
 import se.itello.example.payments.PaymentReceiver;
-
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
