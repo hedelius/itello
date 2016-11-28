@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of <code>PaymentStrategy</code> that handles files
+ * Implementation of <code>ParsingStrategy</code> that handles files
  * that conform to specification in the document Betalningsservice.doc.
  * Do not use this class for large files - it reads the entire file into memory
  * before processing it!
  */
-public class BetalningPaymentStrategy implements PaymentStrategy {
+public class BetalningPaymentStrategy implements ParsingStrategy {
 
     private static final String CHARSET = "ISO8859-1";
     private static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("yyyyMMdd");

@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.Date;
 
 /**
- * Implementation of <code>PaymentStrategy</code> that handles files
+ * Implementation of <code>ParsingStrategy</code> that handles files
  * that conform to specification in the document Inbetalningstjänsen.doc.
  * Do not use this class for large files - it reads the entire file into memory
  * before processing it!
  */
-public class InbetalningPaymentStrategy implements PaymentStrategy {
+public class InbetalningPaymentStrategy implements ParsingStrategy {
 
     private static final String CHARSET = "ISO8859-1";
     private static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("yyyyMMdd");

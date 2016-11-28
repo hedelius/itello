@@ -17,14 +17,12 @@ public class ItelloTest {
 
     private PaymentFileHandler sut;
     private PaymentReceiver paymentReceiver;
-    private FileFinderService fileReader;
 
     @Before
     public void setup() {
 
-        fileReader = mock(FileFinderService.class);
         paymentReceiver = mock(PaymentReceiver.class);
-        sut = new PaymentFileHandler(fileReader, paymentReceiver);
+        sut = new PaymentFileHandler(paymentReceiver);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -34,7 +32,7 @@ public class ItelloTest {
         String unknownFile = "Some_random_file_unsupported.txt";
 
         // act
-        sut.handleFile(unknownFile);
+        sut.handleFile(unknownFile, null);
 
         // assert - should not get here
         fail();
@@ -58,10 +56,9 @@ public class ItelloTest {
                 "202020202020202020202020202020202020200d0a";
         byte[] testDataBytes = DatatypeConverter.parseHexBinary(testDataHex);
         InputStream testDataStream = new ByteArrayInputStream(testDataBytes);
-        when(fileReader.find(fileName)).thenReturn(testDataStream);
 
         // act
-        sut.handleFile(fileName);
+        sut.handleFile(fileName, testDataStream);
 
         // assert
         String expectedAccount = "5555-5555555555";
@@ -98,10 +95,9 @@ public class ItelloTest {
                 "3030303030303030303030303030303030300d0a";
         byte[] testDataBytes = DatatypeConverter.parseHexBinary(testDataHex);
         InputStream testDataStream = new ByteArrayInputStream(testDataBytes);
-        when(fileReader.find(fileName)).thenReturn(testDataStream);
 
         // act
-        sut.handleFile(fileName);
+        sut.handleFile(fileName, testDataStream);
 
         // assert
         String expectedAccount = "1234-1234567897";
