@@ -28,7 +28,7 @@ public class InbetalningParsingStrategyTest {
     }
 
     @Test
-    public void testInbetalningTestData() {
+    public void testInbetalningOfficialTestData() {
 
         // arrange
         String testDataHex =

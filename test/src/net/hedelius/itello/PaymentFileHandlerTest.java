@@ -45,14 +45,29 @@ public class PaymentFileHandlerTest {
     public void testBetalningFileType()
     {
         // arrange
-        String betalningFileName = "foobar_betalningsservice.txt";
+        String fileName = "foobar_betalningsservice.txt";
         InputStream stream = mock(InputStream.class);
 
         // act
-        sut.handleFile(betalningFileName, stream);
+        sut.handleFile(fileName, stream);
 
         // assert
         verify(betalningParsingStrategy).handle(stream, paymentReceiver);
         verifyZeroInteractions(inbetalningParsingStrategy);
+    }
+
+    @Test
+    public void testInbetalningFileType()
+    {
+        // arrange
+        String fileName = "foobar_inbetalningstjansten.txt";
+        InputStream stream = mock(InputStream.class);
+
+        // act
+        sut.handleFile(fileName, stream);
+
+        // assert
+        verify(inbetalningParsingStrategy).handle(stream, paymentReceiver);
+        verifyZeroInteractions(betalningParsingStrategy);
     }
 }
