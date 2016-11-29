@@ -47,7 +47,7 @@ public class PaymentFileHandler {
         String fileNameEnding = fileName.substring(fileName.lastIndexOf("_"));
         ParsingStrategy parsingStrategy = strategies.get(fileNameEnding);
         if (parsingStrategy == null)
-            throw new IllegalArgumentException("Unsupported file type!");
+            throw new PaymentException("Unsupported file type!");
         parsingStrategy.handle(stream, paymentReceiver);
     }
 }

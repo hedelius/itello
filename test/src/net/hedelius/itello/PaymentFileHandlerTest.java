@@ -28,7 +28,7 @@ public class PaymentFileHandlerTest {
         sut = new PaymentFileHandler(fileNameMapping, paymentReceiver);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = PaymentException.class)
     public void testUnknownFileType() {
 
         // arrange
