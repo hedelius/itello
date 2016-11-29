@@ -82,4 +82,24 @@ public class BetalningParsingStrategyTest {
         inOrder.verify(paymentReceiver).payment(new BigDecimal("400.07"), "4567890123");
         inOrder.verify(paymentReceiver).endPaymentBundle();
     }
+
+    @Test(expected = PaymentException.class)
+    public void testMultipleHeaderLines()
+    {
+        // arrange
+        String testDataHex =
+            "4f3535353520353535353535353535352020202020202020202020202030" +
+            "20202020202020202031323031313033313553454b0d0a" +
+            "4f35353535203535353535353535353520202020202020343730302c3137" +
+            "20202020202020202034323031313033313553454b0d0a" +
+            "4220202020202020202020303030303031323334353637383930202020202020202020202020202020202020202020202020200d0a";
+        byte[] testDataBytes = DatatypeConverter.parseHexBinary(testDataHex);
+        InputStream testDataStream = new ByteArrayInputStream(testDataBytes);
+
+        // act
+        sut.handle(testDataStream, paymentReceiver);
+
+        // assert - should throw and not get here
+        fail();
+    }
 }

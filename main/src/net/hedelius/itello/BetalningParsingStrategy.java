@@ -26,12 +26,17 @@ public class BetalningParsingStrategy implements ParsingStrategy {
     public void handle(InputStream input, PaymentReceiver paymentReceiver) throws PaymentException {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(input, Charset.forName(CHARSET)));
-        String[] lines = reader.lines().toArray(x -> new String[x]);
 
+        String[] lines = reader.lines().toArray(x -> new String[x]);
+        String[] orderLines = Arrays.stream(lines).filter(x -> x.startsWith("O")).toArray(x -> new String[x]);
         String orderLine = lines[0];
 
         if (!orderLine.startsWith("O")) {
             throw new PaymentException("First line is not a header line!");
+        }
+
+        if (orderLines.length != 1) {
+            throw new PaymentException("Incorrect number of header lines!");
         }
 
         String accountNumber = orderLine.substring( 1, 16);
