@@ -14,15 +14,26 @@ public class PaymentFileHandler {
     private final Map<String, ParsingStrategy> strategies;
 
     /**
-     * Constructs a file handler given a payment receiver.
-     * @param paymentReceiver The Itello payment receiver service.
+     * Constructs a file handler with a default mapping from file name ending to parsing strategy.
+     * @param paymentReceiver The Itello payment receiver service to call during parsing.
      */
     public PaymentFileHandler(PaymentReceiver paymentReceiver) {
 
         this.paymentReceiver = paymentReceiver;
         strategies = new HashMap<>();
-        strategies.put(BETALNING, new BetalningPaymentStrategy());
-        strategies.put(INBETALNING, new InbetalningPaymentStrategy());
+        strategies.put(BETALNING, new BetalningParsingStrategy());
+        strategies.put(INBETALNING, new InbetalningParsingStrategy());
+    }
+
+    /**
+     * Constructs a file handler with a custom mapping from file name ending to parsing strategy.
+     * @param strategies The parsing strategy mapping.
+     * @param paymentReceiver The Itello payment receiver service to call during parsing.
+     */
+    public PaymentFileHandler(Map<String, ParsingStrategy> strategies, PaymentReceiver paymentReceiver) {
+
+        this.paymentReceiver = paymentReceiver;
+        this.strategies = strategies;
     }
 
     /**
